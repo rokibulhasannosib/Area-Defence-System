@@ -1,0 +1,40 @@
+#include <Servo.h>
+
+String inputString;
+
+Servo left_right;
+Servo up_down;
+
+
+const int LEFT_RIGHT_PIN = 6;
+const int UP_DOWN_PIN   = 7;
+
+void setup()
+{
+  left_right.attach(LEFT_RIGHT_PIN);
+  up_down.attach(UP_DOWN_PIN);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  while (Serial.available())
+  {
+    inputString = Serial.readStringUntil('\r');
+    Serial.println(inputString);
+
+    int x_axis = inputString.substring(0, inputString.indexOf(',')).toInt();
+    int y_axis = inputString.substring(inputString.indexOf(',') + 1).toInt();
+
+    int y = map(y_axis, 65, 1080, 65, 130);
+    int x = map(x_axis, 0, 1920, 180, 0);
+
+    left_right.write(x);
+    up_down.write(y);
+
+    Serial.print("First Integer: ");
+    Serial.println(x);
+    Serial.print("Second Integer: ");
+    Serial.println(y);
+  }
+}
